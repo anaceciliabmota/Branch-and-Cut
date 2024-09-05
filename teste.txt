@@ -1,0 +1,115 @@
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+CPXPARAM_Preprocessing_Reduce                    1
+CPXPARAM_Threads                                 1
+CPXPARAM_Preprocessing_Reformulations            0
+CPXPARAM_TimeLimit                               7200
+CPXPARAM_MIP_Tolerances_UpperCutoff              1.7976931348623157e+308
+CPXPARAM_MIP_Tolerances_MIPGap                   1e-08
+Legacy callback                                  BbLUD
+         Disabling repeat represolve because of lazy constraint/incumbent callback.
+Tried aggregator 1 time.
+Reduced MIP has 6 rows, 15 columns, and 30 nonzeros.
+Reduced MIP has 15 binaries, 0 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.09 sec. (0.01 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+MIP emphasis: balance optimality and feasibility.
+MIP search method: traditional branch-and-cut.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.16 sec. (0.01 ticks)
+   -0 0 1 1 -0
+     1 0 -0 1
+       -0 0 1
+         1 -0
+           -0
+            
+0 20 25 0 
+0 0 8 10 
+0 0 0 18 
+0 0 0 0 
+2 0
+0 0 0 1 1 0 
+teste5
+entrou
+entrou
+entrou
+entrou
+entrou
+
+v: 3 cutval: 2
+entrou
+entrou
+entrou
+entrou
+
+v: 4 cutval: 0
+entrou
+entrou
+entrou
+
+v: 1 cutval: 2
+entrou
+entrou
+
+v: 2 cutval: 2
+   -0 1 -0 1 -0
+     0 1 -0 1
+       -0 0 1
+         1 -0
+           -0
+            
+0 20 25 0 
+0 0 8 10 
+0 0 0 18 
+0 0 0 0 
+2 0
+0 0 1 0 1 0 
+teste5
+entrou
+entrou
+entrou
+entrou
+entrou
+
+v: 2 cutval: 2
+entrou
+entrou
+entrou
+entrou
+
+v: 4 cutval: 2
+entrou
+entrou
+entrou
+
+v: 3 cutval: 2
+entrou
+entrou
+
+v: 1 cutval: 2
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap         Variable B NodeID Parent  Depth
+
+*     0     0      integral     0      825.0000      793.0000        7    3.88%                        0             0
+Elapsed time = 0.38 sec. (0.04 ticks, tree = 0.00 MB, solutions = 1)
+
+User cuts applied:  1
+
+Root node processing (before b&c):
+  Real time             =    0.39 sec. (0.04 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.00 ticks)
+                          ------------
+Total (root+branch&cut) =    0.39 sec. (0.04 ticks)
+
+
+Branch-and-cut_Results: 
+
+Instance: teste
+Tree_Size: 1
+Total_Time: 0
+LB: 825
+UB: 825
+Status: Optimal
+
+Route: 1 3 6 2 4 5 1 
