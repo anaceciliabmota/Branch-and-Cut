@@ -7,7 +7,7 @@ extern vector <vector<int> > MaxBack(double** x, int n){
     
     /////execução e teste
 
-    double **teste = new double *[4];
+    /*double **teste = new double *[4];
 	for (int i = 0; i < 4; i++)
 	{
 		teste[i] = new double[4];
@@ -25,7 +25,7 @@ extern vector <vector<int> > MaxBack(double** x, int n){
 
     pair<vector<vector<int>>, pair<int, int>> pteste;
     pteste = internalMaxBack(teste, 4);
-    cout << pteste.second.first << " " << pteste.second.second << endl;
+    cout << pteste.second.first << " " << pteste.second.second << endl;*/
 
 
     return p.first;
@@ -58,9 +58,11 @@ extern vector <vector<int> > MinCut(double** x, int n){
     vertices.first.insert(v1);
     vertices.first.insert(v2);
 
+    cout << v1 << " " << v2 << endl;
     
     // v1 entra v2 
     while(s.size() > 2){
+        cout << "interação 1 do while" << endl; 
         s.erase(v1);
         //essa primeira iteração de cada loop parece desnecessaria
         //tqv
@@ -69,8 +71,9 @@ extern vector <vector<int> > MinCut(double** x, int n){
             x[i][v2] += x[i][v1];
             x[i][v1] = numeric_limits<double>::infinity();
         }
-        for(int i = v1; i < n; i++){
-            x[i][v2] += x[v1][i];
+        x[v1][v2] = numeric_limits<double>::infinity();
+        for(int i = v2 +1 ; i < n; i++){
+            x[v2][i] += x[v1][i];
             x[v1][i] = numeric_limits<double>::infinity();
         }
         solution = internalMaxBack(x, n);
@@ -93,6 +96,8 @@ extern vector <vector<int> > MinCut(double** x, int n){
             vertices.first.insert(v1);
             vertices.first.insert(v2);
         }
+
+        break;
 
     }
   
