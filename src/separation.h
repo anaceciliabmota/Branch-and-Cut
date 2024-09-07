@@ -7,7 +7,7 @@
 #ifndef Separation_H
 #define Separation_H
 
-#include <ilcplex/ilocplex.h>
+//#include <ilcplex/ilocplex.h>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -19,6 +19,7 @@
 #include <pthread.h>
 #include <set>
 #include <iostream>
+#include <unordered_set>
 
 #define EPSILON 0.00000001
 
@@ -32,8 +33,8 @@ typedef struct{
 
 extern vector <vector<int> > MaxBack(double** x, int n);
 extern vector <vector<int> > MinCut(double** x, int n);
-pair<vector<vector<int>>, pair<int, int>> internalMaxBack(double**x, int n);
-double xFunction(set<int>& s, int n, double **x, vector<double> & mb);
+pair<vector<vector<int>>, pair<int, int>> internalMaxBack(double**x, int n, double * weight, vector<unordered_set<int>>& vertices, int cont);
+double xFunction(set<int>& s, int n, double **x, vector<double> & mb, vector<unordered_set<int>>& vertices);
 #endif
 
 //---------------------------------------------------------------------------

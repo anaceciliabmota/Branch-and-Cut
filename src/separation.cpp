@@ -1,38 +1,36 @@
 #include "separation.h"
 
+/// ajeitar o cont
 
 extern vector <vector<int> > MaxBack(double** x, int n){
     pair<vector<vector<int>>, pair<int, int>> p;
-    p = internalMaxBack(x, n);
+    double weight;
+
+    vector<unordered_set<int>> vertices(n);
+
+    for(int i = 0; i < n; i++){
+        unordered_set<int> setinho;
+        setinho.insert(i);
+        vertices[i] = setinho;
+    }
+
+    p = internalMaxBack(x, n, &weight, vertices, n);
     
-    /////execução e teste
-
-    /*double **teste = new double *[4];
-	for (int i = 0; i < 4; i++)
-	{
-		teste[i] = new double[4];
-		for (int j = 0; j < 4; j++)
-		{
-			teste[i][j] = 0;
-		}
-	}
-
-    teste[0][1] = 20;
-    teste[0][2] = 25;
-    teste[1][2] = 8;
-    teste[1][3] = 10;
-    teste[2][3] = 18;
-
-    pair<vector<vector<int>>, pair<int, int>> pteste;
-    pteste = internalMaxBack(teste, 4);
-    cout << pteste.second.first << " " << pteste.second.second << endl;*/
-
 
     return p.first;
 }
 extern vector <vector<int> > MinCut(double** x, int n){
     vector<vector<int>> subconjuntos;
-    pair<set<int>, set<int> >vertices;
+    vector<unordered_set<int>> vertices(n);
+
+    for(int i = 0; i < n; i++){
+        unordered_set<int> setinho;
+        setinho.insert(i);
+        vertices[i] = setinho;
+    }
+    unordered_set<int> best_vertices;
+
+    double weight, best_weight; 
 
     int v1, v2;
 
@@ -41,11 +39,22 @@ extern vector <vector<int> > MinCut(double** x, int n){
         s.insert(i);
     }// s= {0, 1, 2, 3}
 
-    pair<vector<vector<int>>, pair<int, int>> solution = internalMaxBack(x, n);
+    pair<vector<vector<int>>, pair<int, int>> solution = internalMaxBack(x, n, &weight, vertices, n);
     
-    for(int i = 0; i < solution.first.size(); i++){
-        subconjuntos.push_back(solution.first[i]);
+    cout << "weight: " << weight << endl;
+    best_weight = weight;
+
+    double ** x_copy = new double*[n];
+    for(int i = 0; i < n; i++){
+        x_copy[i] = new double[n];
+        for(int j = 0; j < n; j++){
+            x_copy[i][j] = x[i][j];
+        }
     }
+
+    /*for(int i = 0; i < solution.first.size(); i++){
+        subconjuntos.push_back(solution.first[i]);
+    }*/
 
     if(solution.second.first < solution.second.second){
         v1 = solution.second.first;
@@ -54,33 +63,76 @@ extern vector <vector<int> > MinCut(double** x, int n){
         v2 = solution.second.first;
         v1 = solution.second.second;
     }
-   
-    vertices.first.insert(v1);
-    vertices.first.insert(v2);
+    
+    for(int i = 0;i < n; i++){
+        cout << "{ " ;
+        for(unordered_set<int>::iterator it = vertices[i].begin(); it != vertices[i].end(); it++){
+            cout << *it << ", ";
+        }
+        cout << "} " << endl;
+    }
+    vertices[v2].merge(vertices[v1]);
+    vertices[v1].clear();
+    best_vertices = vertices[v2];
+
+    for(int i = 0;i < n; i++){
+        cout << "{ " ;
+        for(unordered_set<int>::iterator it = vertices[i].begin(); it != vertices[i].end(); it++){
+            cout << *it << ", ";
+        }
+        cout << "} " << endl;
+    }
+
+    best_vertices = vertices[v2];
 
     cout << v1 << " " << v2 << endl;
     
+    s.erase(v1);
+    int cont = n-1;
     // v1 entra v2 
-    while(s.size() > 2){
-        cout << "interação 1 do while" << endl; 
-        s.erase(v1);
+    while(s.size() > 2){ 
+
+        cout << "size: " << s.size() << endl;
         //essa primeira iteração de cada loop parece desnecessaria
         //tqv
         //funciona mas ta esquisito
-        for(int i = v1 -1; i >= 0; i--){
-            x[i][v2] += x[i][v1];
-            x[i][v1] = numeric_limits<double>::infinity();
+        
+        for(int i = 0; i < v1; i++){
+            x_copy[i][v2] += x_copy[i][v1];
+            x_copy[i][v1] = numeric_limits<double>::infinity();
         }
-        x[v1][v2] = numeric_limits<double>::infinity();
-        for(int i = v2 +1 ; i < n; i++){
-            x[v2][i] += x[v1][i];
-            x[v1][i] = numeric_limits<double>::infinity();
-        }
-        solution = internalMaxBack(x, n);
 
-        for(int i = 0; i < solution.first.size(); i++){
-            subconjuntos.push_back(solution.first[i]);
+        x_copy[v1][v2] = numeric_limits<double>::infinity();
+
+        for(int i = v2 +1 ; i < n; i++){
+            x_copy[v2][i] += x_copy[v1][i];
+            x_copy[v1][i] = numeric_limits<double>::infinity();
         }
+        for(int i = v1+1; i < v2; i++){
+            x_copy[i][v2] += x_copy[v1][i];
+            x_copy[v1][i] = numeric_limits<double>::infinity();
+        }
+
+        for (int i = 0; i < n; i++)
+	    {
+            for (int j = 0; j < n; j++)
+            {
+                cout << x_copy[i][j] << " ";
+            }
+            cout << endl;
+	    }
+        solution = internalMaxBack(x_copy, n, &weight, vertices, cont);
+       
+        cout << "w: " << weight << endl;
+
+        if(weight < best_weight){
+            best_weight = weight;
+            best_vertices = vertices[v2];
+        }
+
+        /*for(int i = 0; i < solution.first.size(); i++){
+            subconjuntos.push_back(solution.first[i]);
+        }*/
         if(solution.second.first < solution.second.second){
             v1 = solution.second.first;
             v2 = solution.second.second;
@@ -88,31 +140,39 @@ extern vector <vector<int> > MinCut(double** x, int n){
             v2 = solution.second.first;
             v1 = solution.second.second;
         }
+        cout << v1 << " " << v2 << endl;
 
-        if(vertices.first.find(v1) == s.end() && vertices.first.find(v2) == s.end()){
-            vertices.second.insert(v1);
-            vertices.second.insert(v2);
-        }else{
-            vertices.first.insert(v1);
-            vertices.first.insert(v2);
+        vertices[v2].merge(vertices[v1]);
+        vertices[v1].clear();
+
+        
+
+        for(int i = 0;i < n; i++){
+        cout << "{ " ;
+        for(unordered_set<int>::iterator it = vertices[i].begin(); it != vertices[i].end(); it++){
+            cout << *it << ", ";
+        }
+        cout << "} " << endl;
         }
 
-        break;
-
+        s.erase(v1);
+        if(cont < 0) break;
+        cont--;
     }
-  
+    vector<int> aux(best_vertices.begin(), best_vertices.end());
+    subconjuntos.push_back(aux);
     return subconjuntos;
-
 }
-pair<vector<vector<int>>, pair<int, int>> internalMaxBack(double**x, int n){
+pair<vector<vector<int>>, pair<int, int>> internalMaxBack(double**x, int n, double * weight, vector<unordered_set<int>>& vertices, int cont){
     pair<vector<vector<int>>, pair<int, int> > retorno;
     vector<vector<int>> subconjuntos;
    
-    set<int> s = {0};
+    set<int> s = {n-1};
     vector<double> max_back(n, 0);
+   
     int v;  
 
-    double cutmin = xFunction(s, n, x, max_back);
+    double cutmin = xFunction(s, n, x, max_back, vertices);
     if(cutmin < 2){
         vector<int> v(s.begin(), s.end());
         subconjuntos.push_back(v);
@@ -121,25 +181,27 @@ pair<vector<vector<int>>, pair<int, int>> internalMaxBack(double**x, int n){
     double cutval = cutmin;
     set<int> smin = s;
 
-
-    while(s.size() < n){
+    while(s.size() <= cont){
         double max_value = -numeric_limits<double>::infinity();
         
         for(int i = 0; i < n; i++){
-            if(s.find(i) == s.end()){
+            if(s.find(i) == s.end() && !vertices[i].empty()){
                if(max_value + EPSILON < max_back[i]){
                     max_value = max_back[i];
                     v = i;
                }
             }
         }
-        if(s.size() == n-1){
+        s.insert(v);
+        if(s.size() == cont){
             retorno.second.second = v;
+            *weight = max_back[v];
             break;  
-        }else if(s.size() == n-2){
+        }
+        if(s.size() == cont-1){
             retorno.second.first = v;
         }
-        s.insert(v);
+        
         cutval = cutval + 2 -2*max_back[v];
         max_back[v] = 0;
         if(cutval + EPSILON < 2){
@@ -147,7 +209,7 @@ pair<vector<vector<int>>, pair<int, int>> internalMaxBack(double**x, int n){
             subconjuntos.push_back(v);
         }
         for(int i = 0; i < n; i++){
-            if(s.find(i) == s.end()){
+            if(s.find(i) == s.end() && !vertices[i].empty()){
                 max_back[i] += (i < v ? x[i][v] : x[v][i]);
             }
         }
@@ -161,20 +223,18 @@ pair<vector<vector<int>>, pair<int, int>> internalMaxBack(double**x, int n){
     return retorno;
 }
 
-
 //função que determina a soma dos pesos das arestas que ligam s a complemento de s
 //determina o peso do corte
 //essa função ja faz o b(v) para todos os v
 //retorna pelo ponteiro qual o prox vertice a entrar em s
 
-
-double xFunction(set<int>& s, int n, double **x, vector<double>& mb){
+double xFunction(set<int>& s, int n, double **x, vector<double>& mb, vector<unordered_set<int>>& vertices){
     double sum = 0;
     for(int i = 0; i < n; i++){
-        double max_back = 0; //max_back de v= 2 eh o corte de s com 2 (2 nao pertence a s)
-        if(s.find(i) == s.end()){
+        double max_back = 0; //max_back de v = 2 eh o corte de s com 2 (2 nao pertence a s)
+        if(s.find(i) == s.end() && !vertices[i].empty()){
             //nao ta em s
-            for (set<int>::iterator it = s.begin(); it!=s.end(); ++it){
+            for (set<int>::iterator it = s.begin(); it != s.end(); ++it){
                 int j = *it;
                 if(i < j){
                     sum += x[i][j];
