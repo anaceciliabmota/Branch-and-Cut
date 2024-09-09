@@ -7,7 +7,7 @@
 #ifndef Separation_H
 #define Separation_H
 
-//#include <ilcplex/ilocplex.h>
+#include <ilcplex/ilocplex.h>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -20,6 +20,7 @@
 #include <set>
 #include <iostream>
 #include <unordered_set>
+#include <limits>
 
 #define EPSILON 0.00000001
 
