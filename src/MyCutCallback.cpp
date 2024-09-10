@@ -65,7 +65,7 @@ void MyCutCallback::main()
 	
 	if (cutSetPool.empty() && depth <= 7) {
 		cout << "mincut" << endl;	
-		cutSetPool = MinCut(x_edge, n);
+		//cutSetPool = MinCut(x_edge, n);
 		//cutSetPool = MultipleMinCut(x_edge, n);
 	}
 

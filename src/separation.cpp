@@ -19,7 +19,7 @@ extern vector <vector<int> > MaxBack(double** x, int n){
 
     return p.first;
 }
-extern vector <vector<int> > MinCut(double** x, int n){
+extern vector <vector<int> > MinCut(double** x, int n, int * s, int * t){
     vector<vector<int>> subconjuntos;
     vector<unordered_set<int>> vertices(n);
 
@@ -32,18 +32,6 @@ extern vector <vector<int> > MinCut(double** x, int n){
 
     double weight, best_weight; 
 
-    int v1, v2;
-
-    set<int> s;
-    for(int i  = 0; i < n; i++){
-        s.insert(i);
-    }// s= {0, 1, 2, 3}
-
-    pair<vector<vector<int>>, pair<int, int>> solution = internalMaxBack(x, n, &weight, vertices, n);
-    
-    //cout << "weight: " << weight << endl;
-    best_weight = weight;
-
     double ** x_copy = new double*[n];
     for(int i = 0; i < n; i++){
         x_copy[i] = new double[n];
@@ -51,6 +39,22 @@ extern vector <vector<int> > MinCut(double** x, int n){
             x_copy[i][j] = x[i][j];
         }
     }
+
+    int v1, v2;
+
+    /*set<int> s;
+    for(int i  = 0; i < n; i++){
+        s.insert(i);
+    }// s= {0, 1, 2, 3}*/
+
+    pair<vector<vector<int>>, pair<int, int>> solution = internalMaxBack(x, n, &weight, vertices, n);
+    *s = solution.second.first;
+    *t = solution.second.second;
+    //cout << "weight: " << weight << endl;
+    best_weight = weight;
+    best_vertices = vertices[v2];
+
+   
 
     for(int i = 0; i < solution.first.size(); i++){
         subconjuntos.push_back(solution.first[i]);
@@ -67,11 +71,9 @@ extern vector <vector<int> > MinCut(double** x, int n){
    
     vertices[v2].merge(vertices[v1]);
     vertices[v1].clear();
-    best_vertices = vertices[v2];
 
     //cout << v1 << " " << v2 << endl;
     
-    s.erase(v1);
     int cont = n-1;
     // v1 entra v2 
     while(true){ 
@@ -95,7 +97,7 @@ extern vector <vector<int> > MinCut(double** x, int n){
        
         if(weight + EPSILON < best_weight){
             best_weight = weight;
-            best_vertices = vertices[v2];
+            best_vertices = vertices[solution.second.second];
         }
 
         
@@ -128,8 +130,9 @@ extern vector <vector<int> > MinCut(double** x, int n){
         }
         cout << cont << endl;*/
         cont--;
-        s.erase(v1);
     }
+   // cout << "optimal: " << best_weight << endl;
+    //subconjuntos.clear();
     vector<int> aux(best_vertices.begin(), best_vertices.end());
     subconjuntos.push_back(aux);
     return subconjuntos;
@@ -153,7 +156,7 @@ pair<vector<vector<int>>, pair<int, int>> internalMaxBack(double**x, int n, doub
     double cutval = cutmin;
     set<int> smin = s;
 
-    while(s.size() <= cont){
+    while(true){
         double max_value = -numeric_limits<double>::infinity();
         
         for(int i = 0; i < n; i++){
@@ -173,13 +176,27 @@ pair<vector<vector<int>>, pair<int, int>> internalMaxBack(double**x, int n, doub
         if(s.size() == cont-1){
             retorno.second.first = v;
         }
+        if(cont != n){
+            double sum1 = 0, sum2 = 0;
+            for(int i = 0; i < n; i++){
+                if(s.find(i) == s.end() && !vertices[i].empty()){
+                    sum2 += (i < v ? x[i][v] : x[v][i]);
+                }else if(!vertices[i].empty()){
+                    sum1 -= (i < v ? x[i][v] : x[v][i]);
+                }
+            }
+            cutval = sum2 - sum1;
+        }else{
+            cutval = cutval + 2 -2*max_back[v];
+        }
         
-        cutval = cutval + 2 -2*max_back[v];
         max_back[v] = 0;
         if(cutval + EPSILON < 2){
-            vector<int> v(s.begin(), s.end());
-            subconjuntos.push_back(v);
+            vector<int> vetor(s.begin(), s.end());
+            subconjuntos.push_back(vetor);
         }
+
+
         for(int i = 0; i < n; i++){
             if(s.find(i) == s.end() && !vertices[i].empty()){
                 max_back[i] += (i < v ? x[i][v] : x[v][i]);

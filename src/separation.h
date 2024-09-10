@@ -7,7 +7,7 @@
 #ifndef Separation_H
 #define Separation_H
 
-#include <ilcplex/ilocplex.h>
+//#include <ilcplex/ilocplex.h>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -33,7 +33,7 @@ typedef struct{
 } vertex_type;
 
 extern vector <vector<int> > MaxBack(double** x, int n);
-extern vector <vector<int> > MinCut(double** x, int n);
+extern vector <vector<int> > MinCut(double** x, int n, int *v1, int *v2);
 pair<vector<vector<int>>, pair<int, int>> internalMaxBack(double**x, int n, double * weight, vector<unordered_set<int>>& vertices, int cont);
 double xFunction(set<int>& s, int n, double **x, vector<double> & mb, vector<unordered_set<int>>& vertices);
 #endif
