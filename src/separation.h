@@ -33,9 +33,9 @@ typedef struct{
 } vertex_type;
 
 extern vector <vector<int> > MaxBack(double** x, int n);
-extern vector <vector<int> > MinCut(double** x, int n, int *v1, int *v2);
+extern vector <vector<int> > MinCut(double** x, int n);
 pair<vector<vector<int>>, pair<int, int>> internalMaxBack(double**x, int n, double * weight, vector<unordered_set<int>>& vertices, int cont);
-double xFunction(set<int>& s, int n, double **x, vector<double> & mb, vector<unordered_set<int>>& vertices);
+double xFunction(vector<bool>& s, int n, double **x, vector<double> & mb, vector<unordered_set<int>>& vertices);
 #endif
 
 //---------------------------------------------------------------------------
