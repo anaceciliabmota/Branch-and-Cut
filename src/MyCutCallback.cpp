@@ -47,27 +47,26 @@ void MyCutCallback::main()
 	vector< vector<int> > cutSetPool;
 	vector<IloConstraint> cons; 
 
-	//x_edge é uma matriz de arestas 
-
 	double **x_edge = new double*[n];
  
 	for (int i = 0; i < n; i++) {
 		x_edge[i] = new double[n];
 	}
+
 	int l = 0;
 	for(int i = 0; i < n; i++) {
 		for(int j = i+1; j < n; j++) {
 			x_edge[i][j] = x_vals[l++];
 		}
 	}
-	
+
+	x_vals.end();
+
 	cutSetPool = MaxBack(x_edge, n);
 	
 	if (cutSetPool.empty() && depth <= 7) {
 
 		cutSetPool = MinCut(x_edge, n);
-		cout << "mincut teste" << endl;	
-		//cutSetPool = MultipleMinCut(x_edge, n);
 	}
 
 	/***************** Creating the constraints ***************/

@@ -51,9 +51,9 @@ extern vector <vector<int> > MinCut(double** x, int n){
 
    
 
-    for(int i = 0; i < solution.first.size(); i++){
+    /*for(int i = 0; i < solution.first.size(); i++){
         subconjuntos.push_back(solution.first[i]);
-    }
+    }*/
 
     if(solution.second.first < solution.second.second){
         v1 = solution.second.first;
@@ -94,9 +94,9 @@ extern vector <vector<int> > MinCut(double** x, int n){
         }
 
         
-        for(int i = 0; i < solution.first.size(); i++){
+        /*for(int i = 0; i < solution.first.size(); i++){
             subconjuntos.push_back(solution.first[i]);
-        }
+        }*/
 
         if(cont == 2){
             break;
@@ -116,9 +116,16 @@ extern vector <vector<int> > MinCut(double** x, int n){
         cont--;
     }
    // cout << "optimal: " << best_weight << endl;
-    //subconjuntos.clear();
+    subconjuntos.clear();
     vector<int> aux(best_vertices.begin(), best_vertices.end());
     subconjuntos.push_back(aux);
+
+
+    for (int i = 0; i < n; i++) {
+        delete[] x_copy[i];  // desaloca cada array de double
+    }
+    delete[] x_copy;  
+
     return subconjuntos;
 }
 

@@ -59,4 +59,3 @@ void MyBranchCallback::main()
 		prune(); 
    } 
 }
-
